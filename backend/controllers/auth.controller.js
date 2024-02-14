@@ -18,6 +18,7 @@ import generateTokenAndSetCookie from "../utils/generateToken.js";
 export const signupUser=async(req,res)=>{
     try {
         const {fullName,username,password,confirmPassword,gender}=req.body;
+        // console.table(fullName,username,password,confirmPassword,gender);
         if (password!==confirmPassword) {
             return res.status(400).json({error:"Password Does not Match"})
         }
@@ -50,7 +51,7 @@ export const signupUser=async(req,res)=>{
             profilePic:newUser.profilePic,
         })
     } catch (error) {
-        console.log("Error in signup controller");
+        console.log("Error in signup controller:",error);
         res.status(500).json({error:"Internal server error"})
     }
 }
@@ -67,7 +68,7 @@ export const loginUser=async(req,res)=>{
                 error:"Invalid username or password"
             })
         }
-        generateTokenAndSetCookie(user._id,res)
+        await generateTokenAndSetCookie(user._id,res)
         res.status(201).json({
             _id:user._id,
             fullName:user.fullName,
@@ -75,7 +76,7 @@ export const loginUser=async(req,res)=>{
             profilePic:user.profilePic,
         })
     } catch (error) {
-        console.log("Error in login controller");
+        console.log("Error in login controller:",error);
         res.status(500).json({error:"Internal server error"})
     }
 }
