@@ -1,12 +1,15 @@
 import useConversation from "../../zustand/useConversation.js"
 import {useDispatch,useSelector} from "react-redux"
 import {setConv} from "../../context/authSlice.js"
+import { useSocketContext } from "../../context/socketContext.jsx";
 const Conversation = ({ conversation, lastInd }) => {
 
   const dispatch=useDispatch()
 
 const selectedConv=useSelector(state=>state.seleConv)
   const isSelected=selectedConv?._id===conversation._id;
+  const {onlineUsers}=useSocketContext();
+  const isOnline= onlineUsers.includes(conversation._id)
   return (
     <>
       <div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer
@@ -14,7 +17,7 @@ const selectedConv=useSelector(state=>state.seleConv)
       `}
       onClick={()=>dispatch(setConv(conversation))}
       >
-        <div className="avatar online">
+        <div className={`avatar ${isOnline?"online":""}`}>
           <div className="w-12 rounded-full">
             <img src={conversation.profilePic} alt="useravatar" />
           </div>
